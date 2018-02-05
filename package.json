@@ -1,0 +1,8 @@
+{
+  "name": "indecision-app",
+  "version": "1.0.0",
+  "main": "app.js",
+  "repository": "git@github.com:BirdpersonC137/Indecision-React.git",
+  "author": "Vlad Plotnikov <vladimir.plotnikov89@gmail.com>",
+  "license": "MIT"
+}
