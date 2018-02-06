@@ -1,44 +1,63 @@
-console.log('App.js is running')
-
 //JSX - JavaScript XML
 let app = {
     title: 'Indecision',
     subtitle: 'Put your hands in the hands of a computer',
-    options: ['One', ' Two']
+    options: ['One', ' Two'],
+    todo: ['']
 }
-const template = ( 
-    <div>
-        <h1>{app.title}</h1>
-        {(app.subtitle && <p>{app.subtitle}</p>)}
-        <p>{app.options? app.options : 'no options'}</p>
-    </div>
-);
+//This function is only going to be referenced
+//We do not need to call this function in onSubmit
+const onFormSubmit = (event) =>{
+    event.preventDefault()
+    
+    const option = event.target.elements.option.value;
+    console.log(event.target.elements.option.value);
 
-let count = 0
-const addOne = () => {
-    count = count + 1;
-    renderCounterApp()
+    if(option){
+        app.options.push(option);
+        event.target.elements.option.value = '';
+        renderApp()
+    }
 }
-const reset = () =>{
-    count = 0;
-    renderCounterApp();
+const onMakeDecision = () =>{
+    let random = Math.floor(Math.random()*app.options.length);
+    app.todo[0]=app.options[random]
+    renderApp()
 }
-const removeOne = () =>{
-    count = count - 1;
-    renderCounterApp();
+const removeAll = ()=>{
+    app.options = []
+    renderApp()
 }
+//And and tenerary operators are perfectly fine to use in render methods.
+// {(app.subtitle && <p>{app.subtitle}</p>)}
 
-const appRoot = document.getElementById('app')
-
-const renderCounterApp = () =>{
-    const template2 = (
+//below is the JSX syntax automatically detected by react if react is loaded/present
+//JSX stands for Javascript XML
+const renderApp = () =>{
+    const template = ( 
         <div>
-            <h1>Count: {count}</h1>
-            <button id="1" className="button" onClick={addOne}>+1</button>
-            <button id="2" className="button" onClick={reset}>Reset</button>
-            <button id="3" className="button" onClick={removeOne}>-1</button>
+            <h1>{app.title}</h1>
+            {(app.subtitle && <p>{app.subtitle}</p>)}
+            <ol>
+                {app.options.length? app.options.map((option)=><li key={option}>{option}</li>):'No options'}
+            </ol>
+            <p>Array length: {app.options.length}</p>
+            <form onSubmit={onFormSubmit}>
+                <input type="text" name="option"/>
+                <button>Submit</button>
+                <button disabled={app.options.length === 0} onClick={onMakeDecision}>What should I do?</button>
+                <button onClick={removeAll}>Remove all</button>
+            </form>
+            <div>
+                What should I do?: <p>{app.todo? app.todo:"nothing"}</p>
+            </div>
         </div>
     );
-    ReactDOM.render(template2, appRoot);
+    ReactDOM.render(template, appRoot);
 }
-renderCounterApp()
+//application root div
+const appRoot = document.getElementById('app')
+//renders the whole container/component. First argument is the component
+//that you want to render and second is the place you wanna render it in.
+// ReactDOM.render(template, appRoot);
+renderApp()
