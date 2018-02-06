@@ -4,5 +4,9 @@
   "main": "app.js",
   "repository": "git@github.com:BirdpersonC137/Indecision-React.git",
   "author": "Vlad Plotnikov <vladimir.plotnikov89@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1"
+  }
 }
