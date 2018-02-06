@@ -1,7 +1,7 @@
 'use strict';
 
 var app = {
-    visible: true
+    visible: false
 };
 
 var toggleVisibility = function toggleVisibility() {

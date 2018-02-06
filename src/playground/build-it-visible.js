@@ -1,5 +1,5 @@
 const app = {
-    visible: true
+    visible: false
 }
 
 const toggleVisibility = () =>{
