@@ -8,7 +8,7 @@ class App extends React.Component{
     constructor(props){
         super(props)
         this.state={
-            options:[]
+            options: props.options
         }
         this.handleDeleteOptions = this.handleDeleteOptions.bind(this)
         this.handlePick = this.handlePick.bind(this)
@@ -37,11 +37,10 @@ class App extends React.Component{
        alert(this.state.options[Math.floor(Math.random()*this.state.options.length)])
     }
     render(){
-        const title = 'Indecision'
         const subtitle = 'Put your life in the hands of a computer'
         return(
             <div>
-                <Header title={title} subtitle={subtitle}/>
+                <Header subtitle={subtitle}/>
                 <Action 
                     hasOptions={this.state.options.length >0}
                     handlePick={this.handlePick}
@@ -57,15 +56,26 @@ class App extends React.Component{
         )
     }
 }
+
+App.defaultProps = {
+    options: []
+}
 /////////////////////////////////////////////////////////////////////////////
 
 const Header = (props) => {
     return(
         <div>
             <h1>{props.title}</h1>
-            <h2>{props.subtitle}</h2>
+            {props.subtitle && <h2>{props.subtitle}</h2>}
         </div>
     )
+}
+
+// Default props
+// default props are used when you need the prop to be there and nothing is provided
+// default props can also substitute primitive and non primitive props from being passed in
+Header.defaultProps = {
+    title: 'Indecision'
 }
 // class Header extends React.Component{
 //     render(){
