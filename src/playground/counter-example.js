@@ -5,9 +5,29 @@ class Counter extends React.Component{
         this.handlePlusOne = this.handlePlusOne.bind(this)
         this.handleReset = this.handleReset.bind(this)
         this.state = {
-            count: props.count
+            count: 0
         }
     }
+    componentDidMount() {
+        try{
+            const int = localStorage.getItem('count')
+            const count = parseInt(int, 10)
+            if(!isNaN(count)){
+                this.setState(()=>{
+                    return {count}
+                })
+            }
+        } catch(e) {
+            
+        }
+        // || this.setState(()=>({count}))
+    }
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.count != this.state.count){
+            localStorage.setItem('count', this.state.count)
+        }
+    }
+    
     handlePlusOne(){
         //when we are inside the function we have access to previous value
         //which is the first argument in the function
@@ -42,7 +62,5 @@ class Counter extends React.Component{
         );
     }
 }
-Counter.defaultProps = {
-    count: 0
-}
+
 ReactDOM.render(<Counter />, document.getElementById('app'))

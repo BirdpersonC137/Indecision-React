@@ -8,17 +8,44 @@ class App extends React.Component{
     constructor(props){
         super(props)
         this.state={
-            options: props.options
+            options: []
         }
         this.handleDeleteOptions = this.handleDeleteOptions.bind(this)
         this.handlePick = this.handlePick.bind(this)
         this.handleAddOption = this.handleAddOption.bind(this)
+        this.handleDeleteOption = this.handleDeleteOption.bind(this)
+    }
+    componentDidMount() {
+        try {
+            const json = localStorage.getItem('options');
+            const options = JSON.parse(json)
+            if(options){
+                this.setState(()=>({options}))
+            }
+        } catch (error){
+            
+        }
+    }
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.options.length !== this.state.options.length){
+            const json = JSON.stringify(this.state.options)
+            localStorage.setItem('options', json)
+        }
+    }
+    componentWillUnmount() {
+        
     }
     handleDeleteOptions(){
-        this.setState(()=>{
-            return{
-                options: []
-            }
+        this.setState(() => ({options: []}))
+    }
+    //create a new method that will take in an option that we wanna delete
+    handleDeleteOption(optionToRemove){
+        this.setState((prevState)=>{
+                return {
+                    options: prevState.options.filter((option)=>{
+                        return optionToRemove !== option;
+                    })
+                }
         })
     }
     handleAddOption(option){
@@ -27,11 +54,7 @@ class App extends React.Component{
         }else if(this.state.options.includes(option)){
             return 'This option already exists';
         }
-        this.setState((prevState)=>{
-            return {
-                options: prevState.options.concat([option])
-            }
-        })
+        this.setState((prevState)=>({options: prevState.options.concat([option])}));
     }
     handlePick(){
        alert(this.state.options[Math.floor(Math.random()*this.state.options.length)])
@@ -48,6 +71,7 @@ class App extends React.Component{
                 <Options 
                     options={this.state.options}
                     handleDeleteOptions={this.handleDeleteOptions}
+                    handleDeleteOption={this.handleDeleteOption}
                 />
                 <AddOption 
                     handleAddOption={this.handleAddOption}
@@ -57,9 +81,6 @@ class App extends React.Component{
     }
 }
 
-App.defaultProps = {
-    options: []
-}
 /////////////////////////////////////////////////////////////////////////////
 
 const Header = (props) => {
@@ -116,9 +137,16 @@ const Action = (props) => {
 const Options = (props) => {
         return(
             <div>
+            {props.options.length === 0 && <p>Please add an option to get started!</p>}
             <button onClick={props.handleDeleteOptions}>Remove all</button>
                 {props.options.map((option)=>{
-                    return <Option key={option} optionText={option}/>
+                    return (
+                         <Option 
+                            key={option} 
+                            handleDeleteOption={props.handleDeleteOption} 
+                            optionText={option} 
+                         />
+                    )
                 })}
             </div>
         )   
@@ -138,7 +166,22 @@ const Options = (props) => {
 //////////////////////////////////////////////////////////////////////////
 const Option = (props)=>{
     return(
-        <p>{props.optionText}</p>
+        <div>
+            {props.optionText}
+            <button 
+            // if we just used onClick = {handleDeleteOption}
+            // it would return an event and pass it up as an argument
+            //to handleDeleteOption in <App/> component, so we use the arrow function
+            // with an event. This allows us to pass in the argument
+            // optionText up, which filter then utilizes.
+                onClick={(e)=>{
+                    props.handleDeleteOption(props.optionText)
+                }}
+
+            >
+                Remove
+            </button>
+        </div>
     )
 }
 // class Option extends React.Component{
@@ -161,11 +204,10 @@ class AddOption extends React.Component{
         event.preventDefault()
         const option = event.target.elements.option.value.trim()
         const error = this.props.handleAddOption(option)
-        this.setState(()=>{
-            return{
-                error: error
-            }
-        })
+        this.setState(()=>({error}))
+        if(!error) {
+            event.target.elements.option.value = ''
+        }
     }
     render(){
         return(
