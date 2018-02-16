@@ -1,0 +1,17 @@
+.header{
+    background: $offBlack;
+    color: white;
+    margin-bottom: 4.8rem;
+    padding: $m-size 0;
+}
+// BEM naming convention - Block element modifier
+.header__title{
+    font-size: 3.2rem;
+    margin: 0;
+}
+.header__subtitle{
+    color: $offWhite;
+    font-size: $m-size;
+    font-weight: 500;
+    margin: 0;
+}
