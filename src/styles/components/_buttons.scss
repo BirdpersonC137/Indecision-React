@@ -28,5 +28,11 @@
     background: none;
     border: none;
     color: $offWhite;
-    padding: none;
+    padding: 0;
+}
+
+@media(max-width: $desktop-breakpoint){
+    .big-button{
+        margin-bottom: $s-size;
+    }
 }
